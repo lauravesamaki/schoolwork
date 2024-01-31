@@ -64,3 +64,20 @@ h2 {
   justify-content: center;
   width: 100%;
 }
+
+.Alert, .Alert-error {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 1s, opacity 1s linear;
+}
+
+.Alert.show, .Alert-error.show{
+  visibility: visible;
+  transition: visibility 1s, opacity 1s linear;
+  opacity: 1;
+}

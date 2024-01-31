@@ -5,6 +5,8 @@ export default function ButtonComponent(props) {
         <Button
         variant="contained"
         onClick={props.onClick}
+        type={props.type}
+        onSubmit={props.onSubmit}
         sx={{
             minWidth: "20%",
             height: "30px",

@@ -1,7 +1,6 @@
 import '../App.css';
 import ButtonComponent from '../components/Button';
-import CourseDiv from '../components/CourseDiv';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
 
 export default function HomePage() {
     const nav = useNavigate();
@@ -14,16 +13,8 @@ export default function HomePage() {
             <main className='App-main'>
                 <p>Welcome to Schoolwork!</p>
                 <p>Here you can add your courses and assignments to track your progression.</p>
-                <div className="btns">
-                <ButtonComponent onClick={() => nav('/add-course')} text="Add course" />
-                <ButtonComponent onClick={() => nav('/add-assignment')} text="Add assignment" />
-                </div>
-                <div className="courses">
-                <h2 id='course-h2'>Courses</h2>
-                <CourseDiv courseName="Math" />
-                <CourseDiv courseName="Science" />
-                <CourseDiv courseName="English" />
-                </div>
+                <ButtonComponent onClick={() => nav('/signup') } text="Sign up" />
+                <ButtonComponent onClick={() => nav('/login') } text="Sign in" />
             </main>
         </div>
     );
