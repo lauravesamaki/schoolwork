@@ -1,10 +1,10 @@
 import '../App.css';
-import ButtonComponent from '../components/Button';
-import CourseDiv from '../components/CourseDiv';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Dialog, DialogTitle, DialogActions, DialogContentText } from '@mui/material';
+import ButtonComponent from '../components/Button';
+import CourseDiv from '../components/CourseDiv';
 import Alert from '../components/Alert';
 
 export default function UserPage() {
@@ -53,17 +53,37 @@ export default function UserPage() {
     };
 
     const handleLogout = () => {
-        localStorage.removeItem('token');
         nav('/');
+    };
+
+    const getInfo = async () => {
+        try {
+            const user = await axios.get('http://localhost:5000/api/users', { 
+                params: { username: username },
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+
+            if (user.status === 200) {
+                const elem = document.querySelector('#userInfo')
+                elem.innerHTML = `Username: ${user.data.username} <br /> ID: ${user.data._id}`;
+            }
+        }
+        catch (error) {
+            console.log(error);
+        }
     };
 
     return (
         <div className='App'>
-            <header className='App-header'>
+            <header className='App-header user'>
                 <h1>Schoolwork</h1>
             </header>
-            <main>
+            <main className='App-main user-main'>
                 <h2 id='user-h2'>Welcome, {username}!</h2>
+                <ButtonComponent onClick={getInfo} text='My info' />
+                <p id='userInfo'></p>
                 <div className="btns">
                     <ButtonComponent onClick={() => nav('/add-course') } text="Add course" />
                     <ButtonComponent onClick={handleLogout} text="Sign out" />

@@ -1,16 +1,19 @@
 import InputComponent from "../components/Input";
 import ButtonComponent from "../components/Button";
 import '../App.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import axios from 'axios';
 import Alert from '../components/Alert';
 
 export default function AddCourse() {
     const nav = useNavigate();
+    const location = useLocation();
     const [name, setName] = useState('');
     const [code, setCode] = useState('');
     const [teacher, setTeacher] = useState('');
+
+    const userId = location.state.userId;
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -63,7 +66,7 @@ export default function AddCourse() {
                         value={teacher} />
                     <ButtonComponent text="Add course" type='submit' />
                 </form>
-                <ButtonComponent text="Back" onClick={() => nav('/')} />
+                <ButtonComponent text="Back" onClick={() => nav(`/user/${userId}`)} />
             </main>
         </div>
     );

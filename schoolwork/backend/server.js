@@ -3,40 +3,21 @@ require('./mongodb');
 require('express-async-errors');
 const express = require('express');
 const cors = require('cors');
-const cookieParser = require('cookie-parser');
-const coursesRouter = require('./routes/courses');
-const assignmentsRouter = require('./routes/assignments');
-const usersRouter = require('./routes/users');
-const errorHandler = require('./middleware/errorhandler');
 const connectMongoDB = require('./mongodb');
+const userRouter = require('./routes/users');
+const assignmentRouter = require('./routes/assignments');
+const courseRouter = require('./routes/courses');
+const APIError = require('./errors/custom');
 const app = express();
 const port = process.env.PORT;
 const url = process.env.MONGODB_URI;
 
 app.use(express.json());
+app.use(cors());
 
-const corsOptions = {
-    origin: 'http://localhost:3000',
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: [
-        'Content-Type', 
-        'Authorization',
-        'Access-Control-Allow-Credentials'
-    ],
-};
-
-app.use(cors(corsOptions));
-
-app.use(cookieParser());
-
-//routes
-app.use('/api/courses', coursesRouter);
-app.use('/api/assignments', assignmentsRouter);
-app.use('/api/users', usersRouter);
-
-//error handling middleware
-app.use(errorHandler);
+app.use('/api/users', userRouter);
+app.use('/api/assignments', assignmentRouter);
+app.use('/api/courses', courseRouter);
 
 const start = async () => {
     try {
@@ -46,8 +27,8 @@ const start = async () => {
         });
     }
     catch (error) {
-        console.log(error);
+        throw new APIError('Error connecting to MongoDB', 500);
     }
-}
+};
 
 start();

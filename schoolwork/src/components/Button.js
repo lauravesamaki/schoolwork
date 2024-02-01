@@ -13,16 +13,18 @@ export default function ButtonComponent(props) {
             margin: "10px",
             padding: "10px",
             borderRadius: "5px",
-            backgroundColor: "#000",
+            backgroundColor: "#fff",
+            color: "#000",
             outline: "none",
             fontSize: "0.75rem",
+            fontFamily: "Kalam, sans-serif",
             "&:focus": {
             border: "1px solid #000",
             outline: "none",
             },
             "&:hover": {
-            backgroundColor: "#fff",
-            color: "#000",
+            backgroundColor: "#000",
+            color: "#fff",
             },
         }}
         >

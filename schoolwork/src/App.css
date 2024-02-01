@@ -1,5 +1,8 @@
 .App {
   text-align: center;
+  font-family: 'Just Me Again Down Here', sans-serif;
+  background-color: #1B2223;
+  color: white;
 }
 
 .App-logo {
@@ -8,21 +11,36 @@
 }
 
 .App-header {
-  background-color: #282c34;
-  min-height: 10vh;
+  min-height: 40vh;
   display: flex;
   flex-flow: column wrap;
   align-items: center;
-  justify-content: center;
-  color: white;
+  justify-content: flex-end;
+}
+
+.user {
+  min-height: 10vh !important;
 }
 
 .App-main {
   width: 100%;
-  min-height: 90vh;
+  min-height: 60vh;
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.user-main {
+  min-height: 65vh !important;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  border-radius: 5px;
 }
 
 .courses {
@@ -48,21 +66,27 @@
 }
 
 h1 {
-  font-size: 2rem;
+  font-size: 128px;
   font-weight: lighter;
 }
 
 h2 {
-  font-size: 1.5rem;
+  font-size: 40px;
   font-weight: lighter;
 }
 
-.form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
+p {
+  font-size: 32px;
+}
+
+a {
+  color: #61dafb;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #0b6882;
+  text-decoration: underline;
 }
 
 .Alert, .Alert-error {

@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const jwt = require('jsonwebtoken');
+const asyncHandler = require('../middleware/asyncErrors');
 const User = require('../models/users');
 const Assignment = require('../models/assignments');
 const APIError = require('../errors/custom');
@@ -10,70 +11,75 @@ app.use(express.json());
 
 const maxAge = 3 * 24 * 60 * 60;
 
+// generate JWT
 const generateToken = (id) => {
-    return jwt.sign({id}, process.env.ACCESS_TOKEN_SECRET, {
+    return jwt.sign({ id }, process.env.ACCESS_TOKEN_SECRET, {
         expiresIn: maxAge,
     });
 };
 
-const getUsers = async (req, res) => {
-    const users = await User.find();
-    res.status(200).json(users);
-};
+// register user
+// POST /api/users/signup
+// access public
+const registerUser = asyncHandler( async (req, res) => {
+    const { username, password } = req.body;
 
-const getUser = async (req, res) => {
-    const user = await User.findById(req.params.id);
-    res.status(200).json(user);
-};
+    if (!username || !password) {
+        throw new APIError('Please enter username and password', 400);
+    }
 
-const createUser = async (req, res) => {
-    const user = new User({
-        username: req.body.username,
-        password: req.body.password,
-    });
-    const newUser = await user.save();
+    const userExists = await User.findOne({ username });
 
-    const token = generateToken(newUser._id);
-    res.cookie('jwt', token, {httpOnly: true, maxAge: maxAge * 1000});
-    res.status(201).json({user: newUser._id}).end();
-};
+    if (userExists) {
+        throw new APIError('User already exists', 400);
+    }
 
-const updateUser = async (req, res) => {
-    const updateUser = await User.findOneAndUpdate(
-        {_id: req.params.id},
-        req.body,
-        {new: true}
+    const user = await User.create({ username, password });
+    
+    if (user) {
+        return res.status(201).json(
+            { 
+                id: user._id,
+                username: user.username,
+                token: generateToken(user._id)
+            }
+        );
+    }
+    else {
+        throw new APIError('Invalid user data', 400);
+    }
+});
+
+
+// login user
+// POST /api/users/login
+// access public
+const loginUser = asyncHandler( async (req, res) => {
+    const { username, password } = req.body;
+    const user = await User.login(username, password);
+
+    return res.status(200).json(
+        { 
+            id: user._id,
+            username: user.username,
+            token: generateToken(user._id)
+        }
     );
-    res.status(200).json(updateUser);
-};
+});
 
-const deleteUser = async (req, res) => {
-    const deleteUser = await User.findOneAndDelete({_id: req.params.id});
-
-    await Assignment.deleteMany({user: req.params.id});
-    
-    res.status(200).json(deleteUser);
-};
-
-const login = async (req, res, next) => {
-    const {username, password} = req.body;
-    
-    try {
-        const user = await User.login(username, password);
-        const token = generateToken(user._id);
-        res.cookie('jwt', token, {httpOnly: true, maxAge: maxAge * 1000});
-        res.status(200).json({user: user._id}).end();
-    }
-    catch {
-        throw new APIError(401, 'Incorrect username or password');
-    }
-};
+// get user
+// GET /api/users/:username
+// access private
+const getUser = asyncHandler( async (req, res) => {
+    const {_id, username} = await User.findById(req.user.id);
+    return res.status(200).json({
+        id: _id,
+        username,
+    });
+});
 
 module.exports = {
-    getUsers,
+    registerUser,
+    loginUser,
     getUser,
-    createUser,
-    updateUser,
-    deleteUser,
-    login,
 };
