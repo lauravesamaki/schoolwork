@@ -20,7 +20,8 @@
     "express-async-handler": "^1.2.0",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.3.0",
-    "mongoose": "^8.1.1"
+    "mongoose": "^8.1.1",
+    "web-vitals": "^3.5.2"
   },
   "devDependencies": {
     "concurrently": "^8.2.2",
