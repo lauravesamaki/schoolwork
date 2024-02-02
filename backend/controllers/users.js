@@ -50,7 +50,6 @@ const registerUser = asyncHandler( async (req, res) => {
     }
 });
 
-
 // login user
 // POST /api/users/login
 // access public
@@ -71,11 +70,7 @@ const loginUser = asyncHandler( async (req, res) => {
 // GET /api/users/:username
 // access private
 const getUser = asyncHandler( async (req, res) => {
-    const {_id, username} = await User.findById(req.user.id);
-    return res.status(200).json({
-        id: _id,
-        username,
-    });
+    return res.status(200).json(req.user);
 });
 
 module.exports = {
