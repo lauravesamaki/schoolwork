@@ -1,12 +1,15 @@
+/* eslint-disable no-unused-vars */
 import '../App.css';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { login, reset } from '../features/auth/authSlice';
+import { toast } from 'react-toastify';
 import axios from 'axios';
 import InputComponent from "../components/Input";
 import ButtonComponent from "../components/Button";
 
-export default function SignIn() {
-    const nav = useNavigate();
+export default function LogIn() {
     const [formData, setFormData] = useState({
         username: '',
         password: ''
@@ -14,26 +17,34 @@ export default function SignIn() {
 
     const { username, password } = formData;
 
+    const nav = useNavigate();
+    const dispatch = useDispatch();
+
+    const { user, isLoading, isError, isSuccess, message } = useSelector((state) => state.auth);
+
+    useEffect(() => {
+        if(isError){
+            toast.error(message);
+        }
+
+        if(isSuccess || user){
+            const id = user ? user._id : null;
+            nav(`/user/${id}`);
+        }
+
+        dispatch(reset());
+    }, [user, isError, isSuccess, message, nav, dispatch]);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const user = await axios.get(`http://localhost:5000/api/users/`, { params: { username: username } })
-        
-        if (user) {
-            await axios.post(`http://localhost:5000/api/users/login`, { password: password, username: username } )
-                .then((res) => {
-                    if (res.status === 200) {
-                        nav(`/user/${user.data._id}`, { state: { username: user.data.username } });
-                    }
-                    else {
-                        alert('Incorrect username or password');
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
+        const userData = {
+            username,
+            password
         }
-    };
+
+        dispatch(login(userData));
+    }
 
     return (
         <div className="App">

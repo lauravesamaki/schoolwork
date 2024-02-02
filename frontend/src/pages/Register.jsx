@@ -1,12 +1,15 @@
+/* eslint-disable no-unused-vars */
 import '../App.css';
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
+import {useSelector, useDispatch} from 'react-redux';
+import {toast} from 'react-toastify';
+import {register, reset} from '../features/auth/authSlice';
 import axios from 'axios';
 import InputComponent from '../components/Input';
 import ButtonComponent from '../components/Button';
 
-export default function SignUp() {
-    const nav = useNavigate();
+export default function Register() {
     const [formData, setFormData] = useState({
         username: '',
         password: '',
@@ -15,31 +18,37 @@ export default function SignUp() {
 
     const {username, password, passwordConfirmation} = formData;
 
+    const nav = useNavigate();
+    const dispatch = useDispatch();
+
+    const {user, isLoading, isError, isSuccess, message} = useSelector((state) => state.auth);
+
+    useEffect(() => {
+        if(isError){
+            toast.error(message);
+        }
+
+        if(isSuccess || user){
+            const id = user ? user._id : null;
+            nav(`/user/${id}`);
+        }
+
+        dispatch(reset());
+    }, [user, isError, isSuccess, message, nav, dispatch]);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+
         if (password !== passwordConfirmation) {
-            alert('Passwords do not match');
-            return;
+            toast.error('Passwords do not match');
         }
         else {
-            await axios.post('http://localhost:5000/api/users/signup', {
-                username: username,
-                password: password,
-                headers: {
-                    Authorization: `Bearer ${sessionStorage.getItem('token')}`
-                }
-            })
-                .then((res) => {
-                    if (res.status === 201) {
-                        nav(`/user/${res.id}`, {state: {username: res.username}});
-                    }
-                    else {
-                        alert('Error creating account');
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
+            const userData = {
+                username, 
+                password
+            }
+
+            dispatch(register(userData));
         }
     }
 
