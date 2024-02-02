@@ -9,10 +9,6 @@ const assignmentSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Course'
     },
-    user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-    },
     dueDate: {
         type: Date,
         required: true,
