@@ -3,7 +3,7 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const asyncHandler = require('../middleware/asyncErrors');
 const User = require('../models/users');
-const Assignment = require('../models/assignments');
+const Course = require('../models/courses');
 const APIError = require('../errors/custom');
 const app = express();
 
@@ -18,9 +18,9 @@ const generateToken = (id) => {
     });
 };
 
-// register user
-// POST /api/users/signup
-// access public
+// @desc Register a user
+// @route POST /api/users/signup
+// @access Public
 const registerUser = asyncHandler( async (req, res) => {
     const { username, password } = req.body;
 
@@ -50,9 +50,9 @@ const registerUser = asyncHandler( async (req, res) => {
     }
 });
 
-// login user
-// POST /api/users/login
-// access public
+// @desc Login a user
+// @route POST /api/users/login
+// @access Public
 const loginUser = asyncHandler( async (req, res) => {
     const { username, password } = req.body;
     const user = await User.login(username, password);
@@ -66,15 +66,70 @@ const loginUser = asyncHandler( async (req, res) => {
     );
 });
 
-// get user
-// GET /api/users/:username
-// access private
+// @desc get user
+// @route GET /api/users/:username
+// @access Private
 const getUser = asyncHandler( async (req, res) => {
     return res.status(200).json(req.user);
+});
+
+// @desc Update a user
+// @route PATCH /api/users/:id
+// @access Private
+const updateUser = asyncHandler( async (req, res) => {
+    const { id, username, password } = req.body;
+
+    if(!username || !password) {
+        throw new APIError(400, 'Fill in all required fields');
+    }
+
+    // Confirm that the user exists
+    const userExists = await User.findById(id).lean().exec();
+
+    if(!userExists) {
+        throw new APIError(404, 'User not found');
+    }
+
+    const user = await User.save({
+        _id: id,
+        username: username,
+        password: password,
+    });
+
+    res.status(200).json({ message: `${user.username} has been updated`});
+});
+
+// @desc Delete a user
+// @route DELETE /api/users/:id
+// @access Private
+const deleteUser = asyncHandler( async (req, res) => {
+    const { id } = req.body;
+
+    // Confirm that the user exists
+    const userExists = await User.findById(id).lean().exec();
+
+    if(!userExists) {
+        throw new APIError(404, 'User not found');
+    }
+
+    // check if the user is authorized to delete the user
+    if(userExists._id.toString() !== req.user._id.toString()) {
+        throw new APIError(401, 'User not authorized');
+    }
+
+    const result = await User.findByIdAndDelete(id).exec();
+
+    // Delete all the user's courses
+    await Course.deleteMany({ user: result._id });
+
+
+    res.status(200).json({ message: `User ${result.username} has been deleted`});
 });
 
 module.exports = {
     registerUser,
     loginUser,
     getUser,
+    updateUser,
+    deleteUser,
 };

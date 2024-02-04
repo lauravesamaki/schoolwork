@@ -2,8 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const {
-    getAllAssignments,
-    getAssignment,
+    getAssignments,
     createAssignment,
     updateAssignment,
     deleteAssignment
@@ -11,10 +10,9 @@ const {
 
 const protect = require('../middleware/authMiddleware');
 
-router.get ('/', protect, getAllAssignments);
-router.get ('/:id', protect, getAssignment);
+router.get ('/', protect, getAssignments);
 router.post ('/', protect, createAssignment);
-router.put ('/:id', protect, updateAssignment);
+router.patch ('/:id', protect, updateAssignment);
 router.delete ('/:id', protect, deleteAssignment);
 
 module.exports = router;

@@ -1,4 +1,11 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 .App {
+  height: 100vh;
   text-align: center;
   font-family: 'Just Me Again Down Here', sans-serif;
   background-color: #1B2223;
@@ -52,21 +59,64 @@ form {
   width: 100%;
 }
 
-.course-div {
-  width: 30%;
+.course-elem {
+  min-width: 30%;
   margin: 0.5rem;
-  border: 1px solid black;
+  border: 1px solid rgb(255, 255, 255);
   border-radius: 5px;
-  background-color: #282c34;
+  background-color: rgb(78, 83, 91);
   color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.course-elem h2 {  
+  font-family: 'Kalam', sans-serif;
+  font-weight: lighter;
+  font-size: 28px;
 }
 
 #course-h2 {
   width: 100%;
 }
 
+.assignments {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 80%;
+  font-family: 'Kalam', sans-serif;
+  background-color: #1B2223;
+  border-radius: 10px;
+}
+
+.assignments h3 {
+  font-size: 24px;
+  font-weight: lighter;
+}
+
+.assignments h4 {
+  font-size: 20px;
+  font-weight: lighter;
+  text-decoration: underline;
+}
+
+.assignments p {
+  font-size: 16px;
+  font-weight: lighter;
+}
+
+.add-assignment {
+  width: fit-content;
+  margin: 0.5rem;
+}
+
 h1 {
-  font-size: 128px;
+  font-size: 118px;
   font-weight: lighter;
 }
 
@@ -87,21 +137,4 @@ a {
 a:hover {
   color: #0b6882;
   text-decoration: underline;
-}
-
-.Alert, .Alert-error {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  visibility: hidden;
-  opacity: 0;
-  transition: visibility 1s, opacity 1s linear;
-}
-
-.Alert.show, .Alert-error.show{
-  visibility: visible;
-  transition: visibility 1s, opacity 1s linear;
-  opacity: 1;
 }

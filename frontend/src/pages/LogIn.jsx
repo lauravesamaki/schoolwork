@@ -28,8 +28,7 @@ export default function LogIn() {
         }
 
         if(isSuccess || user){
-            const id = user ? user._id : null;
-            nav(`/user/${id}`);
+            nav('/user');
         }
 
         dispatch(reset());

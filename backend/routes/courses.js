@@ -2,17 +2,17 @@ const express = require('express');
 const router = express.Router();
 
 const {
-    getAllCourses,
-    getCourse,
+    getCourses,
     createCourse,
     updateCourse,
     deleteCourse
 } = require('../controllers/courses');
 
-router.get ('/', getAllCourses);
-router.get ('/:id', getCourse);
-router.post ('/', createCourse);
-router.put ('/:id', updateCourse);
-router.delete ('/:id', deleteCourse);
+const protect = require('../middleware/authMiddleware');
+
+router.get ('/', protect, getCourses);
+router.post ('/', protect, createCourse);
+router.patch ('/:id', protect, updateCourse);
+router.delete ('/:id', protect, deleteCourse);
 
 module.exports = router;

@@ -11,6 +11,10 @@ const courseSchema = new mongoose.Schema({
     },
     code: String,
     teacher: String,
+    assignments: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Assignment',
+    }],
 });
 
 const Course = mongoose.model('Course', courseSchema);

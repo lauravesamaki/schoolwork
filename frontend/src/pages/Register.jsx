@@ -29,8 +29,7 @@ export default function Register() {
         }
 
         if(isSuccess || user){
-            const id = user ? user._id : null;
-            nav(`/user/${id}`);
+            nav(`/user`);
         }
 
         dispatch(reset());
