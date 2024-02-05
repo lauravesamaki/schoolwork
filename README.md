@@ -5,7 +5,7 @@ The Schoolwork app is a web application designed to help students track their as
 ## Features
 
 - Course Management: Users can create and manage multiple courses, each with its own set of assignments.
-- Assignment Tracking: Users can add assignments to their courses, specifying details such as due dates, descriptions, and priority levels.
+- Assignment Tracking: Users can add assignments to their courses, specifying details such as due dates and descriptions.
 - Progress Tracking: Users can track their progress on assignments, mark them as completed, and view their overall progress in each course.
 - User Authentication: The app provides secure user authentication and authorization to ensure data privacy.
 
@@ -13,9 +13,10 @@ The Schoolwork app is a web application designed to help students track their as
 
 The Schoolwork app is built using the following technologies:
 
-- MongoDB: A NoSQL database used to store user, course and assignment data.
-- Express.js: A web application framework for building the backend server.
-- React.js: A JavaScript library for building the user interface.
-- Node.js: A JavaScript runtime environment used for server-side development.
-- HTML/CSS: Used for structuring and styling the app's user interface.
+- MongoDB
+- Express.js
+- React.js
+- Node.js
+- HTML/CSS
+- Redux Toolkit
 
