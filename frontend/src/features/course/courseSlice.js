@@ -43,6 +43,23 @@ export const getCourses = createAsyncThunk('course/getAll',
     }
 );
 
+// update a course
+export const updateCourse = createAsyncThunk('course/update',
+    async (courseData, thunkAPI) => {
+        try {
+            const token =  thunkAPI.getState().auth.user.token;
+            return await courseService.updateCourse(courseData, token);
+        }
+        catch (error) {
+            const message = (error.response && error.response.data.message)
+                || error.message
+                || error.toString();
+
+            return thunkAPI.rejectWithValue({message});
+        }
+    }
+);
+
 // delete a course
 export const deleteCourse = createAsyncThunk('course/delete',
     async (courseId, thunkAPI) => {
@@ -90,6 +107,21 @@ export const courseSlice = createSlice({
                 state.courses = action.payload;
             })
             .addCase(getCourses.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload;
+            })
+            .addCase(updateCourse.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(updateCourse.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.courses = state.courses.map(
+                    course => course._id === action.payload._id ? action.payload : course
+                );
+            })
+            .addCase(updateCourse.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
                 state.message = action.payload;

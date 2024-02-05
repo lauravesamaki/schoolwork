@@ -1,38 +1,69 @@
 /* eslint-disable no-unused-vars */
 import '../App.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import InputComponent from "./Input";
 import ButtonComponent from "./Button";
-import { createCourse } from '../features/course/courseSlice';
+import { createCourse, updateCourse, getCourses, reset } from '../features/course/courseSlice';
 
-export default function CourseForm() {
+export default function CourseForm( { course, setCourse }) {
     const dispatch = useDispatch();
 
-    const [name, setName] = useState('');
-    const [code, setCode] = useState('');
-    const [teacher, setTeacher] = useState('');
+    const [formValues, setFormValues] = useState({
+        name: '',
+        code: '',
+        teacher: ''
+    });
+
+    useEffect(() => {
+        if (course && course.name) {
+            setFormValues({
+                name: course.name,
+                code: course.code,
+                teacher: course.teacher,
+            });
+        }
+    }, [course]);
+
+    const text = Object.keys(course).length === 0 ? 'Add' : 'Update';
 
     const onSubmit = (e) => {
         e.preventDefault();
         
-        const courseData = {
-            name,
-            code,
-            teacher,
-        };
+        if (course && course._id) {
+            dispatch(updateCourse({
+                id: course._id,
+                name: formValues.name,
+                code: formValues.code,
+                teacher: formValues.teacher,
+                user: course.user
+            }))
+                .then(() => {
+                    dispatch(getCourses());
+                });
+        }
+        else {
+            const courseData = {
+                name: formValues.name,
+                code: formValues.code,
+                teacher: formValues.teacher
+            };
+    
+            dispatch(createCourse(courseData))
+                .then(() => {
+                    dispatch(getCourses());
+                });
+        }
 
-        dispatch(createCourse(courseData));
-
-        setName('');
-        setCode('');
-        setTeacher('');
-
-        document.getElementById('add-course').style.display = 'none';
+        setFormValues({
+            name: '',
+            code: '',
+            teacher: ''
+        });
     }
 
     return (
-        <div id="add-course" style={{display: 'none'}}>
+        <div id="course-form" style={{display: 'none'}}>
             <form className="form" onSubmit={onSubmit}>
                 <span 
                     className="close" 
@@ -41,28 +72,37 @@ export default function CourseForm() {
                         cursor: 'pointer',
                         fontSize: '24px',
                         color: 'black'}}
-                    onClick={() => document.getElementById('add-course').style.display = 'none'}>close
+                    onClick={() => {
+                        document.getElementById('course-form').style.display = 'none'
+                        setFormValues({
+                            name: '',
+                            code: '',
+                            teacher: ''
+                        });
+
+                        setCourse({});
+                    }}>close
                 </span>
                 <InputComponent 
                     id="courseName"
                     label="Course name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    value={formValues.name}
+                    onChange={(e) => setFormValues({...formValues, name: e.target.value})}
                     required 
                 />
                 <InputComponent 
                     id="courseCode" 
                     label="Course code"
-                    value={code}
-                    onChange={(e) => setCode(e.target.value)}
+                    value={formValues.code}
+                    onChange={(e) => setFormValues({...formValues, code: e.target.value})}
                     />
                 <InputComponent 
                     id="courseTeacher"
                     label="Course teacher"
-                    value={teacher}
-                    onChange={(e) => setTeacher(e.target.value)}
+                    value={formValues.teacher}
+                    onChange={(e) => setFormValues({...formValues, teacher: e.target.value})}
                     />
-                <ButtonComponent text="Add course" type='submit' />
+                <ButtonComponent text={text} type='submit' />
             </form>
         </div>
     );

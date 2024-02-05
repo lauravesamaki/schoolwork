@@ -28,6 +28,20 @@ const getAll = async (token) => {
     return response.data;
 };
 
+// update a course
+const updateCourse = async (courseData, token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    }
+
+    const courseId = courseData.id;
+    const response = await axios.patch(`${API_URL}${courseId}`, courseData, config);
+
+    return response.data;
+};
+
 // delete a course
 const deleteCourse = async (courseData, token) => {
     const config = {
@@ -48,6 +62,7 @@ const deleteCourse = async (courseData, token) => {
 const courseService = {
     createCourse,
     getAll,
+    updateCourse,
     deleteCourse
 };
 

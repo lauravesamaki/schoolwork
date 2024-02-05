@@ -15,6 +15,7 @@ export default function UserPage() {
     const dispatch = useDispatch();
     const [open, setOpen] = useState(false);
     const [selectedCourseId, setSelectedCourseId] = useState(null);
+    const [editingCourse, setEditingCourse] = useState({});
 
     const {user} = useSelector((state) => state.auth);
     const {courses, isLoading, isError, message} = useSelector((state) => state.course);
@@ -43,7 +44,13 @@ export default function UserPage() {
     };
 
     const addCourse = () => {
-        document.getElementById('add-course').style.display = 'block';
+        document.getElementById('course-form').style.display = 'block';
+    };
+
+    const editCourse = (course) => {
+        document.getElementById('course-form').style.display = 'block';
+        
+        setEditingCourse(course);
     };
 
     const handleOpen = (id) => {
@@ -87,15 +94,16 @@ export default function UserPage() {
                     <ButtonComponent onClick={handleLogout} text="Sign out" />
                     <ButtonComponent onClick={addCourse} text="Add Course" user={user} />
                 </div>
-                <CourseForm user={user && user._id} />
+                <CourseForm user={user && user._id} course={editingCourse} setCourse={setEditingCourse} />
                 <div className="courses">
                     <h2 id='course-h2'>Courses</h2>
                     {courses.length > 0 ? 
-                        courses.map((course) => {
-                            return <React.Fragment key={course._id}>
+                        courses.map((course, index) => {
+                            return <React.Fragment key={course._id + index}>
                                     <CourseDiv
                                         course={course}
-                                        onClick={() => handleOpen(course._id)}
+                                        onClickDelete={() => handleOpen(course._id)}
+                                        onClickEdit={() => editCourse(course)}
                                      />
                                     {open && selectedCourseId === course._id && (<Confirmation 
                                         open={open}

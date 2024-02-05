@@ -50,24 +50,33 @@ const createCourse = asyncHandler( async (req, res) => {
 // @route PATCH /api/courses/:id
 // @access Private
 const updateCourse = asyncHandler( async (req, res) => {
-    const { id, name, code, teacher, userId } = req.body;
+    const { id, name, code, teacher } = req.body;
+
+    const userExists = await User.findById(req.user._id).lean().exec();
 
     // Confirm that the user exists
-    if(!req.user) {
-        throw new APIError(401, 'User not found');
+    if(!userExists) {
+        throw new APIError(404, 'User not found');
+    }
+
+    // Confirm that the course exists
+    const course = await Course.findById(id).lean().exec();
+
+    if (!course) {
+        throw new APIError(404, 'Course not found');
     }
 
     // Confirm that the user is logged in
-    if(userId.toString() !== req.user._id.toString()) {
+    if(course.user.toString() !== req.user._id.toString()) {
         throw new APIError(401, 'User not authorized');
     }
 
-    const updatedCourse = await Course.save({
+    const updatedCourse = await Course.findByIdAndUpdate(id,{
         _id: id,
         name: name,
         code: code,
         teacher: teacher,
-        user: userId,
+        user: course.user,
     });
 
     res.status(200).json({ message: `${updatedCourse.name} has been updated`});

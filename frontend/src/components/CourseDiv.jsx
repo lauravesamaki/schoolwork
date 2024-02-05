@@ -10,7 +10,7 @@ import AssignmentForm from '../components/AssignmentForm';
 import FormatDate from './DateFormat';
 import Confirmation from './Confirmation';
 
-export default function CourseDiv({ course, onClick }) {
+export default function CourseDiv({ course, onClickDelete, onClickEdit}) {
     const dispatch = useDispatch();
 
     const [completedStates, setCompletedStates] = useState(false);
@@ -134,7 +134,8 @@ export default function CourseDiv({ course, onClick }) {
                         </div>
             <ButtonComponent text="Add assignment" onClick={addAssignment} />
             <AssignmentForm id={course._id} assignment={editingAssignment} completed={completedStates} />
-            <ButtonComponent text="Delete course" onClick={onClick} />
+            <ButtonComponent text="Edit course" onClick={onClickEdit} />
+            <ButtonComponent text="Delete course" onClick={onClickDelete} />
         </div>
     );
 }
