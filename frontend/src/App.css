@@ -30,11 +30,13 @@
 }
 
 .App-main {
-  width: 100%;
+  width: 80%;
   min-height: 60vh;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  margin: 0 auto;
 }
 
 .user-main {
@@ -52,15 +54,14 @@ form {
 
 .courses {
   display: flex;
-  flex-direction: row;
-  align-items: center;
+  flex-flow: row wrap;
+  align-items: flex-start;
   justify-content: center;
-  flex-wrap: wrap;
   width: 100%;
 }
 
 .course-elem {
-  min-width: 30%;
+  min-width: 100%;
   margin: 0.5rem;
   border: 1px solid rgb(255, 255, 255);
   border-radius: 5px;
@@ -137,4 +138,57 @@ a {
 a:hover {
   color: #0b6882;
   text-decoration: underline;
+}
+
+/*Desktop*/
+@media (min-width: 768px) {
+  .App {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .App-main {
+    width: 60%;
+  }
+
+  .courses {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: flex-start;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .course-elem {
+    min-width: 30%;
+    margin: 0.5rem;
+  }
+
+  .course-elem h2 {
+    font-size: 24px;
+  }
+
+  .assignments {
+    width: 90%;
+    padding: 1rem;
+  }
+
+  .add-assignment {
+    width: fit-content;
+    margin: 0.5rem;
+  }
+
+  h1 {
+    font-size: 118px;
+  }
+
+  h2 {
+    font-size: 40px;
+  }
+
+  p {
+    font-size: 32px;
+  }
 }
